@@ -47,6 +47,7 @@ require "tmpdir"
 
 td          = Dir.tmpdir
 tmp         = File.join(td, "neo4j-community-#{node.neo4j.server.version}.tar.gz")
+tmp_extract = File.join(td, "neo4j-community-#{node.neo4j.server.version}")
 tmp_spatial = File.join(td, "neo4j-spatial-#{node.neo4j.server.plugins.spatial.version}-server-plugin.zip")
 tarball_url = "http://dist.neo4j.org/neo4j-community-#{node.neo4j.server.version}-unix.tar.gz"
 
@@ -69,9 +70,9 @@ bash "extract #{tmp}, move it to #{node.neo4j.server.installation_dir}" do
   cwd  "/tmp"
 
   code <<-EOS
-    rm -rf #{node.neo4j.server.installation_dir}
+    rm -rf #{node.neo4j.server.lib_dir}
     tar xfz #{tmp}
-    mv --force `tar -tf #{tmp} | head -n 1` #{node.neo4j.server.installation_dir}
+    mv --force #{tmp_extract} #{node.neo4j.server.installation_dir}
   EOS
 
   creates "#{node.neo4j.server.installation_dir}/bin/neo4j"
@@ -87,15 +88,6 @@ if node.neo4j.server.plugins.spatial.enabled
     EOS
 
     creates "#{node.neo4j.server.installation_dir}/plugins/neo4j-spatial-#{node.neo4j.server.plugins.spatial.version}.jar"
-  end
-end
-
-[node.neo4j.server.conf_dir, node.neo4j.server.data_dir, File.join(node.neo4j.server.data_dir, "log")].each do |dir|
-  directory dir do
-    owner     node.neo4j.server.user
-    group     node.neo4j.server.user
-    recursive true
-    action    :create
   end
 end
 

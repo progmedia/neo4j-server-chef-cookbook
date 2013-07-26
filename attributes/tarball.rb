@@ -16,8 +16,8 @@ default[:neo4j][:server] = {
   # needed only to recursively change permissions. Don't forget to update this
   # when you change :data_dir location!
   :lib_dir   => "/var/lib/neo4j-server/",
-  :data_dir  => "/var/lib/neo4j-server/data/graph.db",
-  :conf_dir  => "/usr/local/neo4j-server/conf",
+  :data_dir  => "/var/lib/neo4j-server/data",
+  :conf_dir  => "/var/lib/neo4j-server/conf",
   :lock_path => "/var/run/neo4j-server.lock",
   :pid_path  => "/var/run/neo4j-server.pid",
   :http => {
